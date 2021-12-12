@@ -1,8 +1,7 @@
 <template>
     <div  class="map">
-        <div @wheel="onWheel" class="map-img"
+        <div class="map-img"
         :style="{height: height*zoomPercent + 'px', width: width*zoomPercent + 'px'}">
-            
         </div>
 	</div>
 </template>
@@ -12,37 +11,14 @@ export default{
 
     data(){
         return{
-            height: 23,
-            width: 33,
-            zoomPercent: 100,
+            height: 9,
+            width: 9.6,
+            zoomPercent: 200,
         }
     },
     methods: {
-        zoomUp(){
-            if(this.zoomPercent !== 100){
-                this.zoomPercent + 5;
-                console.log('zoom up');
-            }
-        },
-
-        zoomDown(){
-            if(this.zoomPercent > 10){
-                this.zoomPercent - 5;
-                console.log('zoom down');
-            }
-        },
-        onWheel(event){
-            if (ev.deltaY < 0) {
-                zoomUp();
-            } else {
-                zoomDown();
-            }
-        },
-
+        
     },
-
-    
-  
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -109,9 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
     position: relative;
     margin: 0 auto;
 
-    background-image: url('https://avatars.mds.yandex.net/i?id=31ac6ea6f1bbcaca697b26ae862ed7a4-4580574-images-thumbs&n=13');
+    background-image: url('../maps/map.jpg');
     background-position: center;
     background-size: cover;
-	transform: translateZ(30px);
 }
 </style>
