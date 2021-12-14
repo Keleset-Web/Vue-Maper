@@ -1,47 +1,61 @@
 <template>
   <div class="menuArea">
-    <div @click="isActive" class="menu">
+    <div @click="toogleActive" :class="{ active: isActive }" class="menu">
       <div class="toggle">
         <ion-icon name="menu"></ion-icon>
       </div>
       <li style="--i:0">
-        <a href="#"><ion-icon name="person-circle-outline"></ion-icon></a>
+        <a href="#">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </a>
       </li>
       <li style="--i:1">
-        <a href="#"><ion-icon name="map-outline"></ion-icon></a>
+        <a href="#">
+          <ion-icon name="map-outline"></ion-icon>
+        </a>
       </li>
       <li style="--i:2">
-        <a href="#"><ion-icon name="information-circle-outline"></ion-icon></a>
+        <a href="#">
+          <ion-icon name="information-circle-outline"></ion-icon>
+        </a>
       </li>
       <li style="--i:3">
-        <a href="#"><ion-icon name="add-circle-outline"></ion-icon></a>
+        <a href="#">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </a>
       </li>
       <li style="--i:4">
-        <a href="#"><ion-icon name="remove-circle-outline"></ion-icon></a>
+        <a href="#">
+          <ion-icon name="remove-circle-outline"></ion-icon>
+        </a>
       </li>
     </div>
   </div>
 </template>
 
 <script>
-export default{
-    data(){
-        return{
-          isActive: false
-        }
+export default {
+  data() {
+    return {
+      isActive: false
+    }
+  },
+  methods: {
+    toogleActive() {
+      this.isActive = !this.isActive
+      console.log('click menu button')
     },
-    methods: {
-      isActive(){
-        this.isActive = !this.isActive
-      }
-    },
+    check() {
+
+    }
+  },
 }
 </script>
 
 <style scoped>
 .menuArea {
   position: fixed;
-  top:0;
+  top: 0;
   right: 50%;
   z-index: 500;
   display: flex;
@@ -57,6 +71,7 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 550;
 }
 
 .menu li {
@@ -82,10 +97,12 @@ export default{
   color: #111;
   transition: 1s;
 }
-.menu li a:hover{
+
+.menu li a:hover {
   background-color: #111111;
   color: #fff;
 }
+
 .menu.active .toggle {
   transform: rotate(180deg);
 }

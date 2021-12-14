@@ -6,12 +6,23 @@
 <script>
 import MapApp from "./components/Map"
 import Menu from "./components/Menu"
+import Modal from './components/UI/Modal.vue';
 export default{
     components: {
         MapApp,
         Menu,
+        Modal
     },
     data(){
+      return{
+        modalList: {
+          isAuto: false,
+          isUser: false,
+          isMapList: false,
+          isInfo: false,
+        }
+      }
+
     },
     methods: {
       
