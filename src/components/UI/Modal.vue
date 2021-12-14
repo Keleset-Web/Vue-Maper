@@ -21,9 +21,6 @@
       </section>
 
       <footer class="modal-footer">
-        <slot name="footer">
-          This is the default footer!
-        </slot>
         <button
             type="button"
             class="btn-green"

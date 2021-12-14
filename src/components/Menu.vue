@@ -4,7 +4,7 @@
       <div class="toggle">
         <ion-icon name="menu"></ion-icon>
       </div>
-      <li style="--i:0">
+      <li @click.stop="openAuth" style="--i:0">
         <a href="#">
           <ion-icon name="person-circle-outline"></ion-icon>
         </a>
@@ -19,12 +19,12 @@
           <ion-icon name="information-circle-outline"></ion-icon>
         </a>
       </li>
-      <li style="--i:3">
+      <li @click.stop="zoomPlus" style="--i:3">
         <a href="#">
           <ion-icon name="add-circle-outline"></ion-icon>
         </a>
       </li>
-      <li style="--i:4">
+      <li @click.stop="zoomMinuse" style="--i:4">
         <a href="#">
           <ion-icon name="remove-circle-outline"></ion-icon>
         </a>
@@ -41,12 +41,12 @@ export default {
     }
   },
   methods: {
-    toogleActive() {
+    toogleActive(e) {
       this.isActive = !this.isActive
       console.log('click menu button')
     },
-    check() {
-
+    openAuth(){
+      this.$emit('openAuth')
     }
   },
 }
@@ -113,8 +113,8 @@ export default {
 
 .toggle {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   background: #fff;
   display: flex;
   justify-content: center;
@@ -123,7 +123,7 @@ export default {
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
-  font-size: 2em;
+  font-size: 1.5em;
   transition: 1.2s;
 }
 </style>

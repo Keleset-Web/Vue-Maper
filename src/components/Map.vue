@@ -8,17 +8,19 @@
 
 <script>
 export default{
+  props: {
 
-    data(){
+  },
+  data(){
         return{
             height: 9,
             width: 9.6,
             zoomPercent: 200,
         }
-    },
-    methods: {
+  },
+  methods: {
         
-    },
+  },
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -79,7 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	overflow: -moz-scrollbars-none;
 }
 .map::-webkit-scrollbar {
-	width: 0; 
+	width: 0;
+  height: 0;
 }
 .map-img{
     position: relative;

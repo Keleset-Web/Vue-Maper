@@ -1,6 +1,16 @@
 <template>
     <MapApp/>
-    <Menu/>
+    <Menu @openAuth = 'openAuth'/>
+    <Modal v-show="modalList.isAuto" @close="openAuth">
+      <template v-slot:header>
+        <h2>Заголовок модалки</h2>
+      </template>
+      <template v-slot:body>
+        <input type="text" placeholder="login..">
+        <input type="password" placeholder="password..">
+        <button>Авторизоваться</button>
+      </template>
+    </Modal>
 </template>
 
 <script>
@@ -25,7 +35,12 @@ export default{
 
     },
     methods: {
-      
+      openAuth(){
+        this.modalList.isAuto = !this.modalList.isAuto;
+      },
+      zoomPlus(){
+
+      }
     },
 }
 
