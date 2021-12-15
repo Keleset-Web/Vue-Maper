@@ -1,14 +1,20 @@
 <template>
-    <MapApp/>
-    <Menu @openAuth = 'openAuth'/>
+    <MapApp
+        v-model:zoomPercent = 'zoomPercent'
+    />
+    <Menu
+        @openAuth = 'openAuth'
+        @zoomPlus = 'zoomPlus'
+        @zoomMinuse = 'zoomMinuse'
+        @openInfo = 'openInfo'
+        @openMap = 'openMap'
+    />
     <Modal v-show="modalList.isAuto" @close="openAuth">
       <template v-slot:header>
-        <h2>Заголовок модалки</h2>
+        <h2>{{ modalData.header }}</h2>
       </template>
       <template v-slot:body>
-        <input type="text" placeholder="login..">
-        <input type="password" placeholder="password..">
-        <button>Авторизоваться</button>
+        {{ modalData.body }}
       </template>
     </Modal>
 </template>
@@ -30,16 +36,37 @@ export default{
           isUser: false,
           isMapList: false,
           isInfo: false,
-        }
+        },
+        modalData:{
+          header:'',
+          body: ''
+        },
+        zoomPercent: 200,
       }
 
     },
     methods: {
       openAuth(){
+        this.modalData.header = 'Авторизация'
+        this.modalData.body = Menu
         this.modalList.isAuto = !this.modalList.isAuto;
       },
-      zoomPlus(){
+      openInfo(){
 
+        this.modalList.isInfo = !this.modalList.isInfo;
+      },
+      openMap(){
+        this.modalList.isMapList = !this.modalList.isMapList;
+      },
+      zoomPlus(){
+        if(this.zoomPercent <= 400){
+          this.zoomPercent += 10;
+        }
+      },
+      zoomMinuse(){
+          if(this.zoomPercent >= 160) {
+            this.zoomPercent -= 10;
+          }
       }
     },
 }

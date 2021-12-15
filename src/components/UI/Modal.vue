@@ -1,9 +1,9 @@
 <template>
-  <div class="modal-backdrop">
-    <div class="modal">
+  <div class="modal-backdrop" @click.stop="close">
+    <div @click.stop class="modal">
       <header class="modal-header">
         <slot name="header">
-          This is the default title!
+          Заголовок по умолчанию
         </slot>
         <button
             type="button"
@@ -16,7 +16,7 @@
 
       <section class="modal-body">
         <slot name="body">
-          This is the default body!
+          Тело по умолчанию
         </slot>
       </section>
 
@@ -26,7 +26,7 @@
             class="btn-green"
             @click="close"
         >
-          Close Modal
+          Закрыть
         </button>
       </footer>
     </div>
@@ -34,7 +34,7 @@
 </template>
 <script>
 export default {
-  name: 'Modal',
+  name: "Modal",
   methods: {
     close() {
       this.$emit('close');
@@ -50,7 +50,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,11 +62,12 @@ export default {
   overflow-x: auto;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
 }
 
 .modal-header,
 .modal-footer {
-  padding: 15px;
+  padding: 20px;
   display: flex;
 }
 
@@ -85,7 +86,7 @@ export default {
 
 .modal-body {
   position: relative;
-  padding: 20px 10px;
+  padding: 25px 15px;
 }
 
 .btn-close {

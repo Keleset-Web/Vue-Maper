@@ -9,13 +9,15 @@
 <script>
 export default{
   props: {
-
+    zoomPercent:{
+      type: Number,
+      default: 200
+    }
   },
   data(){
-        return{
+    return{
             height: 9,
             width: 9.6,
-            zoomPercent: 200,
         }
   },
   methods: {
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-<style>
+<style scoped>
 .map{
 	width:100%;
 	height:100%;

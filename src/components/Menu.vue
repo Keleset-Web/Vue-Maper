@@ -9,12 +9,12 @@
           <ion-icon name="person-circle-outline"></ion-icon>
         </a>
       </li>
-      <li style="--i:1">
+      <li @click.stop="openMap" style="--i:1">
         <a href="#">
           <ion-icon name="map-outline"></ion-icon>
         </a>
       </li>
-      <li style="--i:2">
+      <li @click.stop="openInfo" style="--i:2">
         <a href="#">
           <ion-icon name="information-circle-outline"></ion-icon>
         </a>
@@ -43,10 +43,15 @@ export default {
   methods: {
     toogleActive(e) {
       this.isActive = !this.isActive
-      console.log('click menu button')
     },
     openAuth(){
       this.$emit('openAuth')
+    },
+    zoomPlus(){
+      this.$emit('zoomPlus')
+    },
+    zoomMinuse(){
+      this.$emit('zoomMinuse')
     }
   },
 }
