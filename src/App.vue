@@ -4,17 +4,20 @@
     />
     <Menu
         @openAuth = 'openAuth'
-        @zoomPlus = 'zoomPlus'
-        @zoomMinuse = 'zoomMinuse'
         @openInfo = 'openInfo'
         @openMap = 'openMap'
+        @zoomPlus = 'zoomPlus'
+        @zoomMinuse = 'zoomMinuse'
     />
-    <Modal v-show="modalList.isAuto" @close="openAuth">
+    <Modal v-show="modalIsOpen" @close="modalClose">
       <template v-slot:header>
         <h2>{{ modalData.header }}</h2>
       </template>
       <template v-slot:body>
-        {{ modalData.body }}
+        <LoginForm v-if="modalData.body === 'LoginForm'"/>
+        <MapList v-if="modalData.body === 'MapList'" />
+        <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
+        <PlaceInfo v-if="modalData.body === 'PlaceInfo'" v-model="places"/>
       </template>
     </Modal>
 </template>
@@ -23,20 +26,23 @@
 import MapApp from "./components/Map"
 import Menu from "./components/Menu"
 import Modal from './components/UI/Modal.vue';
+import LoginForm from "./components/LoginForm";
+import ProjectInfo from "./components/ProjectInfo";
+import PlaceInfo from "./components/PlaceInfo";
+import MapList from "./components/MapList";
 export default{
     components: {
+      MapList,
+      PlaceInfo,
+      ProjectInfo,
+      LoginForm,
         MapApp,
         Menu,
         Modal
     },
     data(){
       return{
-        modalList: {
-          isAuto: false,
-          isUser: false,
-          isMapList: false,
-          isInfo: false,
-        },
+        modalIsOpen: false,
         modalData:{
           header:'',
           body: ''
@@ -48,15 +54,18 @@ export default{
     methods: {
       openAuth(){
         this.modalData.header = 'Авторизация'
-        this.modalData.body = Menu
-        this.modalList.isAuto = !this.modalList.isAuto;
+        this.modalData.body = 'LoginForm'
+        this.modalIsOpen = true
       },
       openInfo(){
-
-        this.modalList.isInfo = !this.modalList.isInfo;
+        this.modalData.header = 'Информация о проекте'
+        this.modalData.body = 'ProjectInfo'
+        this.modalIsOpen = true
       },
       openMap(){
-        this.modalList.isMapList = !this.modalList.isMapList;
+        this.modalData.header = 'Список карт'
+        this.modalData.body = 'MapList'
+        this.modalIsOpen = true
       },
       zoomPlus(){
         if(this.zoomPercent <= 400){
@@ -65,8 +74,11 @@ export default{
       },
       zoomMinuse(){
           if(this.zoomPercent >= 160) {
-            this.zoomPercent -= 10;
+            this.zoomPercent -= 10
           }
+      },
+      modalClose(){
+        this.modalIsOpen = false
       }
     },
 }

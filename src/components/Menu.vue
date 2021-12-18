@@ -1,7 +1,7 @@
 <template>
   <div class="menuArea">
-    <div @click="toogleActive" :class="{ active: isActive }" class="menu">
-      <div class="toggle">
+    <div :class="{ active: isActive }" class="menu">
+      <div @click="toogleActive" class="toggle">
         <ion-icon name="menu"></ion-icon>
       </div>
       <li @click.stop="openAuth" style="--i:0">
@@ -46,6 +46,12 @@ export default {
     },
     openAuth(){
       this.$emit('openAuth')
+    },
+    openInfo(){
+      this.$emit('openInfo')
+    },
+    openMap(){
+      this.$emit('openMap')
     },
     zoomPlus(){
       this.$emit('zoomPlus')

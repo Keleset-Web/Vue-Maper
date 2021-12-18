@@ -21,13 +21,6 @@
       </section>
 
       <footer class="modal-footer">
-        <button
-            type="button"
-            class="btn-green"
-            @click="close"
-        >
-          Закрыть
-        </button>
       </footer>
     </div>
   </div>
@@ -54,6 +47,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 45000;
 }
 
 .modal {
@@ -63,6 +57,7 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
+  z-index: 50000;
 }
 
 .modal-header,
@@ -107,5 +102,7 @@ export default {
   background: #4AAE9B;
   border: 1px solid #4AAE9B;
   border-radius: 2px;
+  height: 25px;
+  cursor: pointer;
 }
 </style>
