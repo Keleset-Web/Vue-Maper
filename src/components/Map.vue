@@ -1,7 +1,7 @@
 <template>
     <div  class="map">
         <div class="map-img"
-        :style="{height: height*zoomPercent + 'px', width: width*zoomPercent + 'px'}">
+        :style="{height: (height/200)*zoomPercent + 'px', width: (width/200)*zoomPercent + 'px'}">
         </div>
 	</div>
 </template>
@@ -16,8 +16,8 @@ export default{
   },
   data(){
     return{
-            height: 9,
-            width: 9.6,
+            height: 4139,
+            width: 5161,
         }
   },
   methods: {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     position: relative;
     margin: 0 auto;
 
-    background-image: url('../maps/map.jpg');
+    background-image: url('../maps/tuapse_min.jpg');
     background-position: center;
     background-size: cover;
 }
