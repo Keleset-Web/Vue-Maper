@@ -18,28 +18,33 @@
         <MapList v-if="modalData.body === 'MapList'" />
         <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
         <PlaceInfo v-if="modalData.body === 'PlaceInfo'" v-model="places"/>
+        <AuthoForm v-if="modalData.body === 'AuthoForm'" @logout="logout"/>
       </template>
     </Modal>
 </template>
 
 <script>
-import MapApp from "./components/Map"
-import Menu from "./components/Menu"
+import MapApp from "./components/Map";
+import Menu from "./components/Menu";
 import Modal from './components/UI/Modal.vue';
 import LoginForm from "./components/LoginForm";
 import ProjectInfo from "./components/ProjectInfo";
 import PlaceInfo from "./components/PlaceInfo";
 import MapList from "./components/MapList";
+import AuthoForm from "./components/AuthoForm";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import VueCookies from 'vue-cookies';
 export default{
-    components: {
-      MapList,
-      PlaceInfo,
-      ProjectInfo,
-      LoginForm,
-        MapApp,
-        Menu,
-        Modal
-    },
+  components: {
+    MapList,
+    PlaceInfo,
+    ProjectInfo,
+    LoginForm,
+    MapApp,
+    Menu,
+    Modal,
+    AuthoForm
+  },
     data(){
       return{
         modalIsOpen: false,
@@ -53,23 +58,37 @@ export default{
     },
     methods: {
       openAuth(){
-        this.modalData.header = 'Авторизация'
-        this.modalData.body = 'LoginForm'
+        if(this.checkAuth()){
+          this.modalData.header = 'Личный кабинет пользователя'
+          this.modalData.body = 'AuthoForm'
+        }else{
+          this.modalData.header = 'Авторизация'
+          this.modalData.body = 'LoginForm'
+        }
         this.modalIsOpen = true
       },
       login(userInput) {
         console.log(userInput.login)
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(userInput.login, userInput.password)
+        console.log(userInput.password)
+        signInWithEmailAndPassword(getAuth(),userInput.login, userInput.password)
             .then((data) => {
               console.log('Авторизация прошла успешно')
-              this.$cookies.set('MapperId', CryptoJS.SHA256(userInput.login), 60 * 60 * 24 * 30, '/')
+              VueCookies.set('MapperId', Math.random().toString(36).substr(2,17), 60 * 60 * 24 * 30, '/')
+              this.modalIsOpen = false
             })
             .catch(error => {
-              console.log(error.code)
+              console.log(error)
               alert(error.message)
             })
+      },
+      logout(){
+        VueCookies.remove('MapperId')
+        this.modalIsOpen = false
+      },
+      checkAuth(){
+        if(VueCookies.get('MapperId')){
+          return true
+        }
       },
       openInfo(){
         this.modalData.header = 'Информация о проекте'

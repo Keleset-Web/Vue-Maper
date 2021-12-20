@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App'
-import firebase from "firebase/app";
+import sha256 from 'crypto-js/sha256'
+import { initializeApp } from "firebase/app"
+import { getAnalytics } from "firebase/analytics"
 
 const firebaseConfig = {
     apiKey: "AIzaSyD6krnRB0F-E_NQcBY_qREXGF41nh8FzW8",
@@ -8,11 +10,15 @@ const firebaseConfig = {
     projectId: "mapper-51947",
     storageBucket: "mapper-51947.appspot.com",
     messagingSenderId: "544616540915",
-    appId: "1:544616540915:web:c366523dd13a8e4ff8a586",
-    measurementId: "G-N5X3819F3E"
+    appId: "1:544616540915:web:1d3694473f272fddf8a586",
+    measurementId: "G-0YZBN31N3Z"
 };
 
-firebase.initializeApp(firebaseConfig)
+// Initialize Firebase
+const fireApp = initializeApp(firebaseConfig);
+const analytics = getAnalytics(fireApp);
+
+
 const app = createApp(App)
 
 app.mount('#app')
