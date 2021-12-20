@@ -14,7 +14,7 @@
         <h2>{{ modalData.header }}</h2>
       </template>
       <template v-slot:body>
-        <LoginForm v-if="modalData.body === 'LoginForm'"/>
+        <LoginForm v-if="modalData.body === 'LoginForm'" @login="login"/>
         <MapList v-if="modalData.body === 'MapList'" />
         <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
         <PlaceInfo v-if="modalData.body === 'PlaceInfo'" v-model="places"/>
@@ -56,6 +56,20 @@ export default{
         this.modalData.header = 'Авторизация'
         this.modalData.body = 'LoginForm'
         this.modalIsOpen = true
+      },
+      login(userInput) {
+        console.log(userInput.login)
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(userInput.login, userInput.password)
+            .then((data) => {
+              console.log('Авторизация прошла успешно')
+              this.$cookies.set('MapperId', CryptoJS.SHA256(userInput.login), 60 * 60 * 24 * 30, '/')
+            })
+            .catch(error => {
+              console.log(error.code)
+              alert(error.message)
+            })
       },
       openInfo(){
         this.modalData.header = 'Информация о проекте'

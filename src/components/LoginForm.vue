@@ -1,20 +1,34 @@
 <template>
-  <form class="login-form">
+  <form class="login-form" @submit.prevent>
     <div class="user-box">
-      <input type="text" name="" required="">
+      <input v-model="userInput.login" type="text" name="" required="">
       <label>Логин</label>
     </div>
     <div class="user-box">
-      <input type="password" name="" required="">
+      <input v-model="userInput.password" type="password" name="" required="">
       <label>Пароль</label>
     </div>
-    <button class="btn-green">Войти</button>
+    <button @click="login" class="btn-green">Войти</button>
   </form>
 </template>
 
 <script>
 export default {
-  name: "LoginForm"
+  name: "LoginForm",
+  data(){
+    return {
+      userInput: {
+        login: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    login(){
+      this.$emit('login', this.userInput)
+    }
+  }
+
 }
 </script>
 
