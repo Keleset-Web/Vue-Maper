@@ -15,7 +15,8 @@
       </template>
       <template v-slot:body>
         <LoginForm v-if="modalData.body === 'LoginForm'" @login="login"/>
-        <MapList v-if="modalData.body === 'MapList'" />
+        <MapList v-if="modalData.body === 'MapList'" @AddMap="addMap"/>
+        <AddMap v-if="modalData.body === 'AddMap'" />
         <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
         <PlaceInfo v-if="modalData.body === 'PlaceInfo'" v-model="places"/>
         <AuthoForm v-if="modalData.body === 'AuthoForm'" @logout="logout"/>
@@ -32,8 +33,10 @@ import ProjectInfo from "./components/ProjectInfo";
 import PlaceInfo from "./components/PlaceInfo";
 import MapList from "./components/MapList";
 import AuthoForm from "./components/AuthoForm";
+import AddMap from './components/AddMap';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import VueCookies from 'vue-cookies';
+
 export default{
   components: {
     MapList,
@@ -43,7 +46,8 @@ export default{
     MapApp,
     Menu,
     Modal,
-    AuthoForm
+    AuthoForm,
+    AddMap
   },
     data(){
       return{
@@ -98,6 +102,12 @@ export default{
       openMap(){
         this.modalData.header = 'Список карт'
         this.modalData.body = 'MapList'
+        this.modalIsOpen = true
+      },
+      addMap(){
+        console.log('Add Map try')
+        this.modalData.header = 'Добавить карту'
+        this.modalData.body = 'AddMap'
         this.modalIsOpen = true
       },
       zoomPlus(){

@@ -10,10 +10,7 @@ export default {
   name: "AuthoForm",
   data(){
     return {
-      userInput: {
-        login: '',
-        password: ''
-      }
+
     }
   },
   methods: {
@@ -27,6 +24,9 @@ export default {
 
 <style scoped>
 .autho{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 400px;
 }
 .btn-green {

@@ -1,20 +1,47 @@
 <template>
-  <div class="select">
-    <select name="format" id="format">
-      <option selected disabled>Выберите карту</option>
-      <option value="tuapse">Туапсинский район</option>
-    </select>
+  <div class="mapList">
+      <div class="select">
+        <select name="format" id="format">
+          <option selected disabled>Выберите карту</option>
+          <option value="tuapse">Туапсинский район</option>
+        </select>
+      </div>
+      <button @click.stop="changeMap" class="btn-green">Загрузить</button>
+      <button v-if="checkAuth" @click="addMap" class="btn-green">Добавить карту</button>
   </div>
-  <button class="btn-green">Загрузить</button>
 </template>
 
 <script>
+import VueCookies from "vue-cookies";
+
 export default {
-  name: "MapList"
+  name: "MapList",
+  data(){
+    return{
+
+    }
+  },
+  methods:{
+    addMap(){
+      this.$emit('AddMap')
+    },
+    checkAuth(){
+      if(VueCookies.get('MapperId')){
+        console.log("Проверка авторизации")
+        return true
+      }
+    },
+  },
 }
 </script>
 
 <style scoped>
+input{
+  padding: 0 .5em;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  width: 100%;
+}
 select {
   -webkit-appearance:none;
   -moz-appearance:none;
@@ -43,7 +70,6 @@ select::-ms-expand {
   background: #4AAE9B;
   overflow: hidden;
   border-radius: .25em;
-  margin-bottom: 15px;
   border: inherit;
 }
 .select::after {
@@ -71,5 +97,6 @@ select::-ms-expand {
   text-align: center;
   height: 25px;
   cursor: pointer;
+  margin-top: 10px;
 }
 </style>
