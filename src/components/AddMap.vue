@@ -44,7 +44,7 @@ export default {
       if(mountainsRef.name === mountainImagesRef.name){
         uploadBytes(mountainImagesRef, this.selectedFile).then((snapshot) => {
           console.log(snapshot)
-          console.log('Uploaded a blob or file!');
+          console.log('Изображение загружено успешно на сервер');
           getDownloadURL(mountainImagesRef)
               .then((url) => {
                 this.mapData.file = url
@@ -56,13 +56,14 @@ export default {
         const db = getFirestore()
         try {
           const docRef = await addDoc(collection(db, "Maps"), this.mapData);
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Запись в базу выполнена успешно ID: ", docRef.id);
         } catch (e) {
-          console.error("Error adding document: ", e);
+          console.error("Ошибка записи в базу данных: ", e);
         }
       }else{
-        console.log('имена не совпали')
+        console.log('Ошибка соотношения данных с базой')
       }
+      this.$emit('closeModal')
     }
   }
 }

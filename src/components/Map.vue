@@ -1,7 +1,17 @@
 <template>
     <div  class="map">
-        <div class="map-img"
-        :style="{height: (height/200)*zoomPercent + 'px', width: (width/200)*zoomPercent + 'px'}">
+        <div class="map-img" v-if="currentMap"
+        :style="{
+          height: (currentMap.height/200)*zoomPercent + 'px',
+          width: (currentMap.width/200)*zoomPercent + 'px',
+          backgroundImage: 'url(' + currentMap.file + ')'
+        }"
+        @dblclick="createMark"
+        >
+          <div v-for="mark in marks" class="mark" v-bind:style="{
+            left: (mark.left/mark.zoomPercent)*zoomPercent+'px',
+            top: (mark.top/mark.zoomPercent)*zoomPercent+'px',
+          }"></div>
         </div>
 	</div>
 </template>
@@ -12,16 +22,35 @@ export default{
     zoomPercent:{
       type: Number,
       default: 200
+    },
+    currentMap:{
+      type: Object,
+      required: false
+    },
+    marks:{
+      type: Array,
+      required: true
     }
   },
   data(){
-    return{
-            height: 4139,
-            width: 5161,
-        }
+    return {
+      height: 4139,
+      width: 5161,
+      left: 0,
+      top: 0,
+      saveZoom: 0
+
+    }
   },
   methods: {
-        
+    createMark(event){
+      const coordinates = {
+        left: event.layerX,
+        top:event.layerY
+      }
+      this.$emit('createMark', coordinates)
+
+    }
   },
 }
 
@@ -89,9 +118,19 @@ document.addEventListener('DOMContentLoaded', function() {
 .map-img{
     position: relative;
     margin: 0 auto;
-
-    background-image: url('../maps/tuapse_min.jpg');
     background-position: center;
     background-size: cover;
+}
+.mark{
+  color:white;
+  line-height: 30px;
+  font-size: 24px;
+  text-align: center;
+  position:absolute;
+  height: 30px;
+  width: 30px;
+  border-radius: 100px;
+  background-color: red;
+  cursor: pointer;
 }
 </style>

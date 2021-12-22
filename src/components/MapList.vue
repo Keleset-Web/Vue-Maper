@@ -1,9 +1,14 @@
 <template>
   <div class="mapList">
       <div class="select">
-        <select name="format" id="format">
+        <select v-model="selectMap" name="format" id="format">
           <option selected disabled>Выберите карту</option>
-          <option value="tuapse">Туапсинский район</option>
+          <option
+              v-for="map in maps"
+              :value="map.id"
+          >
+            {{map.name}}
+          </option>
         </select>
       </div>
       <button @click.stop="changeMap" class="btn-green">Загрузить</button>
@@ -13,17 +18,27 @@
 
 <script>
 import VueCookies from "vue-cookies";
-
 export default {
   name: "MapList",
+  props: {
+    maps: {
+      type: Array,
+      required: true,
+    }
+  },
   data(){
     return{
-
+      selectMap: ''
     }
   },
   methods:{
     addMap(){
       this.$emit('AddMap')
+    },
+    changeMap(){
+      if(this.selectMap !== ''){
+        this.$emit('changeMap', this.selectMap)
+      }
     },
     checkAuth(){
       if(VueCookies.get('MapperId')){
