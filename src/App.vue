@@ -3,7 +3,8 @@
       :zoomPercent='zoomPercent'
       :current-map="currentMap"
       :marks="marks"
-      @createMark = "addMark"
+      @createMark = "openAddMark"
+      @openPlace = "openPlaceInfo"
   />
     <Menu
         @openAuth = 'openAuth'
@@ -20,8 +21,9 @@
         <LoginForm v-if="modalData.body === 'LoginForm'" @login="login"/>
         <MapList :maps="maps" v-if="modalData.body === 'MapList'" @AddMap="addMap" @changeMap="changeMap"/>
         <AddMap v-if="modalData.body === 'AddMap'" @closeModal="modalClose"/>
+        <AddPlace v-if="modalData.body === 'AddPlace'" @addMark="addNewMark" />
         <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
-        <PlaceInfo v-if="modalData.body === 'PlaceInfo'" />
+        <PlaceInfo v-if="modalData.body === 'PlaceInfo'" :place="currentPlace" />
         <AuthoForm v-if="modalData.body === 'AuthoForm'" @logout="logout"/>
       </template>
     </Modal>
@@ -37,12 +39,15 @@ import PlaceInfo from "./components/PlaceInfo";
 import MapList from "./components/MapList";
 import AuthoForm from "./components/AuthoForm";
 import AddMap from './components/AddMap';
+import AddPlace from "./components/AddPlace";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+import {getFirestore, collection, query, where, getDocs, addDoc} from "firebase/firestore";
 import VueCookies from 'vue-cookies';
+import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
 
 export default{
   components: {
+    AddPlace,
     MapList,
     PlaceInfo,
     ProjectInfo,
@@ -60,10 +65,21 @@ export default{
           header:'',
           body: ''
         },
+        newMark:{
+          id: '',
+          name: '',
+          description: '',
+          photo:'',
+          left: '',
+          top: '',
+          zoomPercent: '',
+          mapId: ''
+        },
         zoomPercent: 200,
         marks: [],
         maps: [],
-        currentMap:{}
+        currentMap:{},
+        currentPlace: {}
       }
 
     },
@@ -122,17 +138,45 @@ export default{
         VueCookies.set('currentMap', selectMap, 60 * 60 * 24 * 30, '/')
         this.modalClose()
       },
-      addMark(coordinates){
-        const newMark = {
-          id: Date.now(),
-          name: 'Метка '+Date.now(),
-          description: 'Какое то описание....',
-          left: coordinates.left,
-          top: coordinates.top,
-          zoomPercent: this.zoomPercent,
-          mapId: this.currentMap.id
-        }
-        this.marks.push(newMark)
+      openAddMark(coordinates){
+        this.newMark.left = coordinates.left
+        this.newMark.top = coordinates.top
+        this.newMark.zoomPercent = this.zoomPercent
+        this.newMark.mapId = this.currentMap.id
+        this.modalData.header = 'Добавить метку'
+        this.modalData.body = 'AddPlace'
+        this.modalIsOpen = true
+      },
+      async addNewMark(placeModel){
+        this.newMark.name = placeModel.name
+        this.newMark.description = placeModel.description
+        this.newMark.photo = placeModel.photo
+          const db = getFirestore()
+          try {
+            const docRef = await addDoc(collection(db, "Marks"), this.newMark);
+            console.log("Запись в базу выполнена успешно ID: ", docRef.id);
+          } catch (e) {
+            console.error("Ошибка записи в базу данных: ", e);
+          }
+        this.modalClose();
+        this.clearMarkModel();
+        await this.fetchMarks()
+      },
+      clearMarkModel(){
+        this.newMark.name = ''
+        this.newMark.photo = ''
+        this.newMark.description = ''
+        this.newMark.left = ''
+        this.newMark.top = ''
+        this.newMark.zoomPercent = ''
+        this.newMark.mapId = ''
+      },
+      openPlaceInfo(id){
+        console.log(id)
+        this.modalData.header = 'Информация о месте'
+        this.modalData.body = 'PlaceInfo'
+        this.currentPlace = this.getCurrentPlace(id)
+        this.modalIsOpen = true
       },
       zoomPlus(){
         if(this.zoomPercent <= 300){
@@ -160,13 +204,36 @@ export default{
           }
           this.maps.push(map)
           this.getCurrentMap()
+          this.fetchMarks()
         });
+      },
+      async fetchMarks(){
+        const db = getFirestore()
+        const querySnapshot = await getDocs(collection(db, "Marks"), where('mapId', '==', this.currentMap));
+        querySnapshot.forEach((doc) => {
+              let mark = {
+                id: doc.id,
+                name: doc.data().name,
+                photo: doc.data().photo,
+                left: doc.data().left,
+                top: doc.data().top,
+                description: doc.data().description,
+                zoomPercent: doc.data().zoomPercent,
+                mapId: doc.data().mapId
+              }
+              this.marks.push(mark)
+      });
       },
       getCurrentMap(){
         if(this.maps !== [] && VueCookies.get('currentMap')){
           console.log(VueCookies.get('currentMap'))
           console.log(this.maps.find(el => el.id == VueCookies.get('currentMap')))
           this.currentMap = this.maps.find(el => el.id == VueCookies.get('currentMap'))
+        }
+      },
+      getCurrentPlace(id){
+        if(this.marks !== []){
+          return this.marks.find(el => el.id == id)
         }
       }
     },

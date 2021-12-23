@@ -8,16 +8,20 @@
         }"
         @dblclick="createMark"
         >
-          <div v-for="mark in marks" class="mark" v-bind:style="{
-            left: (mark.left/mark.zoomPercent)*zoomPercent+'px',
-            top: (mark.top/mark.zoomPercent)*zoomPercent+'px',
-          }"></div>
+          <Mark v-for="mark in marks"
+                :left="(mark.left/mark.zoomPercent)*zoomPercent"
+                :top="(mark.top/mark.zoomPercent)*zoomPercent"
+                :name="mark.name"
+                @click="openPlaceInfo(mark.id)"
+          />
         </div>
 	</div>
 </template>
 
 <script>
+import Mark from "./UI/Mark";
 export default{
+  components: {Mark},
   props: {
     zoomPercent:{
       type: Number,
@@ -45,11 +49,13 @@ export default{
   methods: {
     createMark(event){
       const coordinates = {
-        left: event.layerX,
-        top:event.layerY
+        left: event.layerX+2,
+        top:event.layerY+2
       }
       this.$emit('createMark', coordinates)
-
+    },
+    openPlaceInfo(id){
+      this.$emit('openPlace', id)
     }
   },
 }
@@ -121,16 +127,5 @@ document.addEventListener('DOMContentLoaded', function() {
     background-position: center;
     background-size: cover;
 }
-.mark{
-  color:white;
-  line-height: 30px;
-  font-size: 24px;
-  text-align: center;
-  position:absolute;
-  height: 30px;
-  width: 30px;
-  border-radius: 100px;
-  background-color: red;
-  cursor: pointer;
-}
+
 </style>
