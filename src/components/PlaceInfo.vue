@@ -35,7 +35,7 @@ export default {
 <style scoped>
 .placeInfo{
   width: 80vw;
-  height: 70vh;
+  height: 60vh;
   overflow: auto;
   padding: 10px;
 }
