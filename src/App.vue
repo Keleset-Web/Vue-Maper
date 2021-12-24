@@ -23,7 +23,7 @@
         <AddMap v-if="modalData.body === 'AddMap'" @closeModal="modalClose"/>
         <AddPlace v-if="modalData.body === 'AddPlace'" @addMark="addNewMark" />
         <ProjectInfo v-if="modalData.body === 'ProjectInfo'"/>
-        <PlaceInfo v-if="modalData.body === 'PlaceInfo'" :place="currentPlace" />
+        <PlaceInfo v-if="modalData.body === 'PlaceInfo'" :place="currentPlace" @deletePlace="deletePlace"/>
         <AuthoForm v-if="modalData.body === 'AuthoForm'" @logout="logout"/>
       </template>
     </Modal>
@@ -41,7 +41,7 @@ import AuthoForm from "./components/AuthoForm";
 import AddMap from './components/AddMap';
 import AddPlace from "./components/AddPlace";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {getFirestore, collection, query, where, getDocs, addDoc} from "firebase/firestore";
+import {getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc} from "firebase/firestore";
 import VueCookies from 'vue-cookies';
 import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage";
 
@@ -128,6 +128,10 @@ export default{
         this.modalIsOpen = true
       },
       addMap(){
+        if(!this.checkAuth()){
+          alert('Недостаточно прав для загрузки карты, авторизуйтесь');
+          return false;
+        }
         console.log('Add Map try')
         this.modalData.header = 'Добавить карту'
         this.modalData.body = 'AddMap'
@@ -139,6 +143,10 @@ export default{
         this.modalClose()
       },
       openAddMark(coordinates){
+        if(!this.checkAuth()){
+          console.log('Недостаточно прав для создания метки')
+          return false;
+        }
         this.newMark.left = coordinates.left
         this.newMark.top = coordinates.top
         this.newMark.zoomPercent = this.zoomPercent
@@ -148,6 +156,10 @@ export default{
         this.modalIsOpen = true
       },
       async addNewMark(placeModel){
+        if(!this.checkAuth()){
+          console.log('Недостаточно прав для создания метки')
+          return false;
+        }
         this.newMark.name = placeModel.name
         this.newMark.description = placeModel.description
         this.newMark.photo = placeModel.photo
@@ -161,6 +173,22 @@ export default{
         this.modalClose();
         this.clearMarkModel();
         await this.fetchMarks()
+      },
+      async deletePlace(id) {
+        if(!this.checkAuth()){
+          alert('Недостаточно прав, авторизуйтесь!');
+          return false;
+        }
+        const db = getFirestore()
+        try {
+          await deleteDoc(doc(db, "Marks", id));
+          this.marks = this.marks.filter(function (f) {
+            return f.id !== id
+          })
+          this.modalClose();
+        } catch (e) {
+          console.log(e)
+        }
       },
       clearMarkModel(){
         this.newMark.name = ''
@@ -226,8 +254,6 @@ export default{
       },
       getCurrentMap(){
         if(this.maps !== [] && VueCookies.get('currentMap')){
-          console.log(VueCookies.get('currentMap'))
-          console.log(this.maps.find(el => el.id == VueCookies.get('currentMap')))
           this.currentMap = this.maps.find(el => el.id == VueCookies.get('currentMap'))
         }
       },
