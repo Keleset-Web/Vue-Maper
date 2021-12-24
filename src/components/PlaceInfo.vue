@@ -35,7 +35,7 @@ export default {
 <style scoped>
 .placeInfo{
   width: 80vw;
-  height: 70vh;
+  height: 60vh;
   overflow: auto;
   padding: 10px;
 }
@@ -52,7 +52,7 @@ export default {
   background-position: center;
   background-size: cover;
   height: 400px;
-  width: 100%;
+  width: 80%;
 }
 .description{
   width: 100%;

@@ -2,8 +2,8 @@
     <div class="mapDownload">
       <div class="downloadForm">
         <input v-model="mapData.name" type="text" placeholder="Наименование карты"/><br>
-        <input v-model="mapData.width" type="number" placeholder="Ширина">
-        <input v-model="mapData.height" type="number" placeholder="Высота">
+        <input v-model="mapData.width" type="text" placeholder="Ширина">
+        <input v-model="mapData.height" type="text" placeholder="Высота">
         <input
             type="file"
             @change="onFileSelected"
